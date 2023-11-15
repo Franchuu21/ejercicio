@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import GoalInput from './components/goalinput';
-import { ThemeProvider, useTheme } from './components/theme';
+import { ThemeProvider } from './components/theme';
 import Instructions from './components/instructions';
-import Switch from 'react-bootstrap/Switch'; // Importa el Switch de react-bootstrap
+import Switch from 'react-bootstrap/Switch';
 import './App.css';
 
 function App() {
@@ -51,7 +51,7 @@ function App() {
           />
           <Route
             path="/"
-            element={<GoalInput />} // Asumiendo que GoalInput maneja las palabras/frases
+            element={<GoalInput />}
           />
         </Routes>
       </Router>
