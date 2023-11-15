@@ -1,24 +1,29 @@
 import logo from './logo.svg';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import GoalInput from './components/goalinput'
+import { ThemeProvider, useTheme } from './components/theme';
 import './App.css';
 
 function App() {
+
+  const { isBlue, toggleTheme } = useTheme();
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider>
+    <div style={{ backgroundColor: isBlue ? 'blue' : 'white' }}>
+    <Router>
+    <nav>
+      <Link to="/">Home</Link>
+      <Link to="/instructions">Instrucciones</Link>
+    </nav>
+    <Switch>
+      <Route path="/instructions" component={Instructions} />
+      <Route path="/" component={GoalInput} />
+    </Switch>
+  </Router>
+  </div>
+    </ThemeProvider>
   );
 }
 
