@@ -2,7 +2,14 @@ import React from 'react';
 
 const Instructions = () => {
   return (
-    <div>
+    <div
+    style={{
+      padding: '20px',
+      maxWidth: '800px',
+      margin: '0 auto',
+    }}
+    className="app-container"
+  >
       <h2>Instrucciones de uso</h2>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque efficitur blandit massa, ac faucibus eros pellentesque eget. Ut eu malesuada magna. Fusce nec euismod mi, ut suscipit ex. Nulla molestie mollis mi. In nec laoreet leo. Duis neque arcu, facilisis sit amet vulputate sed, dictum quis arcu. Vivamus est ante, ultricies eu tempor sed, mattis sit amet ex. Maecenas sed metus justo. Aenean rutrum pretium sem sit amet pretium. Donec scelerisque pellentesque risus, sed elementum arcu. Vestibulum non mattis turpis, congue vehicula nisi. Ut mollis, lacus non lacinia porttitor, lectus orci tempor quam, ac consectetur quam metus ac augue. Etiam ac augue sit amet ligula volutpat mattis.
 

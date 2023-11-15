@@ -16,7 +16,7 @@ const GoalInput = () => {
   }, [goals]);
 
   return (
-    <div>
+    <div style={{width: '100vw', height: '100vh', padding: '20px'}}>
       <input
         type="text"
         value={inputValue}
