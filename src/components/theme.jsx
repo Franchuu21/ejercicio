@@ -1,11 +1,14 @@
-// En un archivo separado, ThemeContext.js:
-
-import { createContext, useContext, useState } from 'react';
+// theme.js
+import React, { createContext, useContext, useState } from 'react';
 
 const ThemeContext = createContext();
 
 export const useTheme = () => {
-  return useContext(ThemeContext);
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme debe ser utilizado dentro de un ThemeProvider');
+  }
+  return context;
 };
 
 export const ThemeProvider = ({ children }) => {
