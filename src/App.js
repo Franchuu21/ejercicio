@@ -1,5 +1,5 @@
 // App.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import GoalInput from './components/goalinput';
 import { ThemeProvider, useTheme } from './components/theme';
@@ -8,7 +8,20 @@ import Switch from 'react-bootstrap/Switch'; // Importa el Switch de react-boots
 import './App.css';
 
 function App() {
-  const { isBlue, toggleTheme } = useTheme();
+  const [isBlue, setIsBlue] = useState(false);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setIsBlue(savedTheme === 'blue');
+    }
+  }, []);
+
+  const handleThemeChange = () => {
+    const newTheme = !isBlue;
+    setIsBlue(newTheme);
+    localStorage.setItem('theme', newTheme ? 'blue' : 'white');
+  };
 
   return (
     <div
@@ -27,12 +40,19 @@ function App() {
           label="Cambiar Tema"
           id="theme-switch"
           checked={isBlue}
-          onChange={toggleTheme}
-          style={{padding: '20px'}}
+          onChange={handleThemeChange}
+          style={{ padding: '20px' }}
         />
+
         <Routes>
-          <Route path="/instructions" element={<Instructions />} />
-          <Route path="/" element={<GoalInput />} />
+          <Route
+            path="/instructions"
+            element={<Instructions />}
+          />
+          <Route
+            path="/"
+            element={<GoalInput />} // Asumiendo que GoalInput maneja las palabras/frases
+          />
         </Routes>
       </Router>
     </div>

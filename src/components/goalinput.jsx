@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from 'react';
 
 const GoalInput = () => {
+
+  const storedGoals = JSON.parse(localStorage.getItem('goals')) || [];
+
   const [inputValue, setInputValue] = useState('');
-  const [goals, setGoals] = useState([]);
+
+  const [goals, setGoals] = useState(storedGoals);
 
   const addGoal = () => {
     if (inputValue.trim() !== '') {
-      setGoals([...goals, inputValue]);
+      const newGoals = [...goals, inputValue];
+      setGoals(newGoals);
       setInputValue('');
+
+
+      localStorage.setItem('goals', JSON.stringify(newGoals));
     }
   };
 
@@ -16,7 +24,7 @@ const GoalInput = () => {
   }, [goals]);
 
   return (
-    <div style={{width: '100vw', height: '100vh', padding: '20px'}}>
+    <div style={{ width: '100vw', height: '100vh', padding: '20px' }}>
       <input
         type="text"
         value={inputValue}
