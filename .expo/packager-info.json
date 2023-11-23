@@ -1,0 +1,9 @@
+{
+  "expoServerPort": 19000,
+  "packagerPort": 19000,
+  "expoServerNgrokUrl": "https://e6-kvd.anonymous.ejercicio.exp.direct",
+  "packagerNgrokUrl": "https://e6-kvd.anonymous.ejercicio.exp.direct",
+  "ngrokPid": 3792,
+  "packagerPid": null,
+  "webpackServerPort": null
+}

@@ -1,70 +1,102 @@
-// App.js
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import GoalInput from './components/goalinput';
-import { ThemeProvider } from './components/theme';
-import Instructions from './components/instructions';
-import Switch from 'react-bootstrap/Switch';
-import './App.css';
+import { Text, View, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import { BarCodeScanner } from 'expo-barcode-scanner';
+import * as Clipboard from 'expo-clipboard';
+import * as Sharing from 'expo-sharing';
 
-function App() {
-  const [isBlue, setIsBlue] = useState(false);
+export default function App() {
+  const [tienePermiso, setTienePermiso] = useState(null);
+  const [escaneado, setEscaneado] = useState(false);
+  const [datosEscaneados, setDatosEscaneados] = useState(null);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setIsBlue(savedTheme === 'blue');
-    }
+    (async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      setTienePermiso(status === 'granted');
+    })();
   }, []);
 
-  const handleThemeChange = () => {
-    const newTheme = !isBlue;
-    setIsBlue(newTheme);
-    localStorage.setItem('theme', newTheme ? 'blue' : 'white');
+  const manejarCodigoDeBarrasEscaneado = ({ type, data }) => {
+    setEscaneado(true);
+    setDatosEscaneados(data);
   };
 
-  return (
-    <div
-      style={{
-        backgroundColor: isBlue ? 'blue' : 'white',
-        transition: 'background-color 0.3s ease',
-        margin: '0 auto',
-      }}
-    >
-      <Router>
-        <nav className="navbar">
-          <Link to="/">Home</Link>
-          <Link to="/instructions">Instrucciones</Link>
-        </nav>
-        <Switch
-          label="Cambiar Tema"
-          id="theme-switch"
-          checked={isBlue}
-          onChange={handleThemeChange}
-          style={{ padding: '20px' }}
-        />
+  const copyToClipboard = () => {
+    if (datosEscaneados) {
+      Clipboard.setString(datosEscaneados);
+      alert('Texto copiado al portapapeles');
+    }
+  };
 
-        <Routes>
-          <Route
-            path="/instructions"
-            element={<Instructions />}
-          />
-          <Route
-            path="/"
-            element={<GoalInput />}
-          />
-        </Routes>
-      </Router>
-    </div>
+  const shareOnWhatsApp = async () => {
+    if (datosEscaneados) {
+      try {
+        const url = `whatsapp://send?text=${encodeURIComponent(datosEscaneados)}`;
+        await Linking.openURL(url);
+      } catch (error) {
+        console.error('Error al compartir en WhatsApp', error.message);
+      }
+    }
+  };
+  
+  
+  
+
+  return (
+    <View style={styles.contenedor}>
+      <BarCodeScanner
+        onBarCodeScanned={escaneado ? undefined : manejarCodigoDeBarrasEscaneado}
+        style={StyleSheet.absoluteFillObject}
+      />
+      {escaneado && (
+        <View style={styles.contenedorDatos}>
+          <Text style={styles.textoDatos}>{datosEscaneados}</Text>
+          <TouchableOpacity onPress={copyToClipboard} style={styles.button}>
+            <Text style={styles.buttonText}>Copiar al Portapapeles</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={shareOnWhatsApp} style={styles.button}>
+            <Text style={styles.buttonText}>Compartir en WhatsApp</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      {tienePermiso === null && (
+        <Text>Esperando permiso para acceder a la cámara.</Text>
+      )}
+      {tienePermiso === false && (
+        <Text>No tienes permiso para acceder a la cámara.</Text>
+      )}
+    </View>
   );
 }
 
-function AppWithThemeProvider() {
-  return (
-    <ThemeProvider>
-      <App />
-    </ThemeProvider>
-  );
-}
-
-export default AppWithThemeProvider;
+const styles = StyleSheet.create({
+  contenedor: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  contenedorDatos: {
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    padding: 10,
+    borderRadius: 5,
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+  },
+  textoDatos: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  button: {
+    backgroundColor: '#4CAF50',
+    padding: 10,
+    margin: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+  },
+});
